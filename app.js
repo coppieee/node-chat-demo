@@ -29,11 +29,16 @@ server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
+//socket.ioのインスタンス作成
 var io = require('socket.io').listen(server);
 
+//クライアントから接続があった時
 io.sockets.on('connection',function(socket){
+	//クライアントからmessageイベントが受信した時
 	socket.on('message',function(data){
+		//念のためdataの値が正しいかチェック
 		if(data && typeof data.text === 'string'){
+			//メッセージを投げたクライアント以外全てのクライアントにメッセージを送信する。
 			socket.broadcast.json.emit('message',{text:data.text});
 		}
 	});
